@@ -1,1 +1,2 @@
 google-adk~=1.2.1
+black~=25.1.0
