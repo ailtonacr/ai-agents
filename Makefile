@@ -32,3 +32,15 @@ setup:
 ## Formats the code using Black.
 lint:
 	black src/ --line-length 118
+
+## Runs the agents in src/agents.
+run-agent:
+	cd src/agents && adk api_server
+
+## Runs the Streamlit app in src/app.
+run-ui:
+	streamlit run src/app/main.py
+
+## Runs both agents and Streamlit app concurrently.
+run:
+	$(MAKE) run-agent & $(MAKE) run-ui
