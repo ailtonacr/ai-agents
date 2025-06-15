@@ -1,5 +1,6 @@
 import bcrypt
 from model.user import User
+from model.email import Email
 
 
 class AuthService:
@@ -21,7 +22,7 @@ class AuthService:
         hashed_password = bcrypt.hashpw(password_bytes, salt)
         return hashed_password.decode('utf-8')
 
-    def register_user(self, username: str, password: str, email: str | None = None) -> tuple[bool, str]:
+    def register_user(self, username: str, password: str, email: Email | None = None) -> tuple[bool, str]:
         if not username or not password:
             return False, 'Usuário e senha são obrigatórios.'
         if len(password) < 6:

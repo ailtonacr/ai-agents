@@ -1,5 +1,6 @@
 import streamlit as st
 from infrastructure.auth import AuthService
+from model.email import Email
 
 
 def login_view(auth: AuthService, get_adk_user_id: callable) -> None:
@@ -31,7 +32,7 @@ def registration_view(auth: AuthService, is_initial_setup: bool = False) -> None
     st.subheader('Cadastro de Novo Usuário' if not is_initial_setup else 'Cadastro do Primeiro Usuário (Admin)')
     with st.form('registration_form'):
         username = st.text_input('Usuário (letras minúsculas, sem espaços)').lower()
-        email = st.text_input('Email (opcional)')
+        email_input = st.text_input('Email (opcional)')
         password = st.text_input('Senha (mínimo 6 caracteres)', type='password')
         confirm_password = st.text_input('Confirme a Senha', type='password')
         submitted = st.form_submit_button('Cadastrar')
@@ -40,13 +41,18 @@ def registration_view(auth: AuthService, is_initial_setup: bool = False) -> None
             if password != confirm_password:
                 st.error('As senhas não coincidem.')
             else:
-                success, message = auth.register_user(username, password, email)
-                if success:
-                    st.success(message)
-                    st.session_state.current_view = 'login'
-                    st.rerun()
-                else:
-                    st.error(message)
+                try:
+                    email = Email(email_input)
+                    success, message = auth.register_user(username, password, email)
+                    if success:
+                        st.success(message)
+                        st.session_state.current_view = 'login'
+                        st.rerun()
+                    else:
+                        st.error(message)
+                except Exception as e:
+                    st.error(str(e))
+
     if not is_initial_setup:
         if st.button('Já tem uma conta? Faça Login'):
             st.session_state.current_view = 'login'
