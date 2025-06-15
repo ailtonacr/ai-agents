@@ -1,5 +1,6 @@
 import streamlit as st
 from model.user import User
+from model.email import Email
 from infrastructure.user_dao import UserDAO
 
 
@@ -79,7 +80,7 @@ def admin_panel_view(user_dao: UserDAO) -> None:
 
         with col1:
             selected_user.name = st.text_input('Nome de Usuário', value=selected_user.name, key='username_input')
-            selected_user.email = st.text_input('Email', value=selected_user.email, key='email_input')
+            email_input = st.text_input('Email', value=selected_user.email, key='email_input')
             selected_user.password = st.text_input('Nova Senha', key='new_password', type='password')
 
         with col2:
@@ -121,12 +122,11 @@ def admin_panel_view(user_dao: UserDAO) -> None:
                     st.error('Você não pode remover seu próprio status de admin.')
                 elif selected_username == logged_in_user_name and not is_active:
                     st.error('Você não pode desativar sua própria conta.')
-                elif not selected_user.name or selected_user.email is not None and '@' not in selected_user.email:
-                    st.warning('Verifique o formato do email.')
                 elif selected_user.password is not None and selected_user.password != confirm_new_password:
                     st.warning('As senhas devem ser iguais, por favor, verifique e tente novamente.')
                 else:
                     try:
+                        selected_user.email = Email(email_input)
                         user_dao.update_user(selected_user)
                         st.success(f'Usuário {selected_username} atualizado com sucesso!')
                         del st.session_state.confirm_action

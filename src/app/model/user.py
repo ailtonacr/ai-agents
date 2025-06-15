@@ -1,12 +1,13 @@
 from dataclasses import dataclass
-from uuid import UUID, uuid5, NAMESPACE_DNS
+from uuid import uuid5, NAMESPACE_DNS
+from .email import Email
 
 
 @dataclass
 class User:
     name: str
     id: str | None
-    email: str | None
+    email: Email | None
     role: str | None
     is_active: bool | None
     password: str | None = None
