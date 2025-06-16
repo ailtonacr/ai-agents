@@ -14,12 +14,33 @@ This guide summarizes the essentials for contributing to the AI Agents Platform.
 
 ## Code Standards
 - **Formatting:** Use Black (`make lint`)
+- **Architecture:** Follow MVC pattern with clear layer separation
 - **Naming:**
-  - Classes: PascalCase
-  - Functions/variables: snake_case
-  - Constants: UPPER_SNAKE_CASE
-- **Docstrings:** Google style
-- **Type hints:** Required in all functions
+  - Classes: PascalCase (e.g., `UserController`, `ChatComponent`)
+  - Functions/variables: snake_case (e.g., `get_user_data`, `session_id`)
+  - Constants: UPPER_SNAKE_CASE (e.g., `MAX_RETRIES`, `DEFAULT_TIMEOUT`)
+  - Files: snake_case (e.g., `user_controller.py`, `chat_components.py`)
+- **Docstrings:** Google style for all public methods
+- **Type hints:** Required in all function signatures
+- **Imports:** Group by standard library, third-party, then local imports
+
+## Project Structure
+```
+src/app/
+├── main.py                    # Application entry point
+├── controller/                # Business logic and routing
+├── infrastructure/            # Data access, services, config
+├── model/                     # Domain entities and validation
+└── view/                      # UI components and presentations
+    └── components/            # Reusable UI components
+```
+
+## Development Guidelines
+- **Controllers**: Keep business logic in controllers, not views
+- **Components**: Create reusable UI components in `view/components/`
+- **Models**: Add validation and business rules to domain models
+- **Infrastructure**: Place all external integrations and data access here
+- **Factory Pattern**: Use `app_factory.py` for dependency management
 
 ## Branching & Workflow
 - `main`: Stable code
