@@ -12,8 +12,8 @@ class ChatSession:
     agent_name: str
     created_at: datetime.datetime
     messages: list[Message] = field(default_factory=list)
-    summary: str = ''
+    summary: str = ""
 
     def __post_init__(self):
         if not self.db_id or self.db_id is None:
-            self.db_id = str(uuid5(NAMESPACE_DNS, f'{self.user_name}-{self.agent_name}-{self.adk_session_id}'))
+            self.db_id = str(uuid5(NAMESPACE_DNS, f"{self.user_name}-{self.agent_name}-{self.adk_session_id}"))

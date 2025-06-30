@@ -33,6 +33,10 @@ setup:
 lint:
 	black src/ --line-length 118
 
+## Run unit tests with coverage.
+test:
+	PYTHONPATH=src pytest -v --cov=src --cov-report=term-missing
+
 ## Runs the agents in src/agents.
 run-agent:
 	cd src/agents && adk api_server

@@ -81,6 +81,7 @@ Provides infrastructure services, data persistence and external integrations.
 - **Application Configuration**: Settings and Streamlit configurations
 - **System Initialization**: Database and schema setup
 - **State Management**: Streamlit session control
+- **Logging System**: Centralized logging for monitoring and debugging (see [logging.md](logging.md))
 
 ### 📊 Domain Layer (`src/app/model/`)
 Defines business entities and their specific rules.
@@ -125,6 +126,14 @@ Defines business entities and their specific rules.
 - User data isolation
 - Environment variables for credentials
 
+## 📊 Monitoring & Observability
+- **Comprehensive Logging**: All application operations are logged with appropriate levels
+- **Log Files**: Daily rotating logs stored in `src/app/logs/`
+- **Error Tracking**: Detailed error logs with stack traces for debugging
+- **Audit Trail**: User actions, authentication attempts, and system operations are tracked
+- **Performance Monitoring**: Key operations timing and resource usage logging
+- See [Logging System](logging.md) for detailed information
+
 ## 🔮 Roadmap
 - Short term: Redis cache, automated tests, CI/CD, metrics
 - Medium term: microservices for agents, external API, WebSockets, containerization
@@ -134,3 +143,4 @@ Defines business entities and their specific rules.
 
 For feature details, see [Features](features.md).
 For development standards, see [Developer Guide](development.md).
+For monitoring and debugging, see [Logging System](logging.md).
