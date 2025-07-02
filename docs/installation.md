@@ -74,14 +74,17 @@ git --version
 ## Verification
 - Run `make run-ui` and `make run-agent` in separate terminals to test connectivity.
 - Or run `make run` to start all components.
+- Check application logs at `src/app/logs/app_activity_YYYY-MM-DD.log` for detailed startup information.
 
 ## Troubleshooting
 - **MySQL not running:** Check service status (`systemctl` or `brew services`).
 - **Dependency errors:** Upgrade pip and reinstall requirements.
 - **Port in use:** Use `lsof -i :<port>` and `kill <PID>`.
 - **Google ADK issues:** Check `.env` credentials and [official docs](https://google.github.io/adk-docs/).
+- **Application issues:** Check logs at `src/app/logs/app_activity_YYYY-MM-DD.log` for detailed error information.
 
 ## Next Steps
 - See [Features](features.md)
 - See [Architecture](architecture.md)
 - See [Developer Guide](development.md)
+- See [Logging System](logging.md) for monitoring and debugging

@@ -15,6 +15,7 @@ This guide summarizes the essentials for contributing to the AI Agents Platform.
 ## Code Standards
 - **Formatting:** Use Black (`make lint`)
 - **Architecture:** Follow MVC pattern with clear layer separation
+- **Logging:** Use the centralized logging system for all operations (see [logging.md](logging.md))
 - **Naming:**
   - Classes: PascalCase (e.g., `UserController`, `ChatComponent`)
   - Functions/variables: snake_case (e.g., `get_user_data`, `session_id`)
@@ -41,6 +42,7 @@ src/app/
 - **Models**: Add validation and business rules to domain models
 - **Infrastructure**: Place all external integrations and data access here
 - **Factory Pattern**: Use `app_factory.py` for dependency management
+- **Logging**: Always add appropriate logs for debugging and monitoring (INFO, WARNING, ERROR levels)
 
 ## Branching & Workflow
 - `main`: Stable code
@@ -65,6 +67,7 @@ src/app/
 - [ ] Read docs and set up environment
 - [ ] Run and write tests
 - [ ] Follow code and commit standards
+- [ ] Add appropriate logging for new features
 - [ ] Update documentation
 - [ ] Review your code before PR
 
@@ -74,4 +77,4 @@ src/app/
 - Email: Sensitive issues
 
 ---
-For more details, see [Architecture](architecture.md) and [Features](features.md).
+For more details, see [Architecture](architecture.md), [Features](features.md), and [Logging System](logging.md).

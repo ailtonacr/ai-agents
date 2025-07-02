@@ -40,6 +40,7 @@ For detailed instructions, see [installation.md](docs/installation.md).
 | Features & Usage       | [features.md](docs/features.md)         |
 | Architecture           | [architecture.md](docs/architecture.md) |
 | Development/Contribute | [development.md](docs/development.md)   |
+| Logging System         | [logging.md](docs/logging.md)           |
 
 ---
 
@@ -78,6 +79,7 @@ For detailed instructions, see [installation.md](docs/installation.md).
 | Administration | [features.md](docs/features.md) | Admin Panel |
 | Code architecture | [architecture.md](docs/architecture.md) | All |
 | How to contribute | [development.md](docs/development.md) | All |
+| Logs and monitoring | [logging.md](docs/logging.md) | All |
 
 ### By Persona
 
@@ -96,6 +98,7 @@ For detailed instructions, see [installation.md](docs/installation.md).
 #### 🔧 DevOps/SysAdmin
 - [Installation](docs/installation.md) → Production Setup
 - [Architecture](docs/architecture.md) → Scalability
+- [Logging](docs/logging.md) → Monitoring & Debugging
 
 ---
 

@@ -1,4 +1,4 @@
-CHAT_STYLES = '''
+CHAT_STYLES = """
     <style>
         /* Overall page adjustments */
         .stApp {
@@ -132,4 +132,4 @@ CHAT_STYLES = '''
             background-color: #3A3D45;
         }
     </style>
-'''
+"""

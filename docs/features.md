@@ -41,6 +41,7 @@ This document summarizes the main features of the AI Agents Platform.
 - Google ADK integration via REST API
 - Automatic DB initialization and migrations
 - Error handling with user-friendly messages
+- Comprehensive logging system for monitoring and debugging
 
 ## Accessibility
 - Responsive design
@@ -53,4 +54,6 @@ This document summarizes the main features of the AI Agents Platform.
 
 ## Support
 - Report issues via GitHub
+- Check application logs for debugging information
 - See [Developer Guide](development.md) for contribution
+- See [Logging System](logging.md) for monitoring and troubleshooting
