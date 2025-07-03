@@ -13,6 +13,14 @@ This document describes the architecture of the AI Agents Platform.
 │ Infrastructure Layer (DAOs, Services, ADK Client)       │
 ├─────────────────────────────────────────────────────────┤
 │ Domain Layer (Models)                                   │
+├─────────────────────────────────────────────────────────┤
+│ External Interfaces                                     │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ MCP Server (Model Context Protocol)                 │ │
+│ │ - Tool exposure via MCP protocol                    │ │
+│ │ - ADK integration                                   │ │
+│ │ - stdio transport                                   │ │
+│ └─────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
 ```
 
