@@ -41,6 +41,7 @@ For detailed instructions, see [installation.md](docs/installation.md).
 | Architecture           | [architecture.md](docs/architecture.md) |
 | Development/Contribute | [development.md](docs/development.md)   |
 | Logging System         | [logging.md](docs/logging.md)           |
+| MCP Server             | [mcp_server.md](docs/mcp_server.md)     |
 
 ---
 
