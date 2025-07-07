@@ -107,6 +107,13 @@ Defines business entities and their specific rules.
 - Communication via ADK
 - Horizontally scalable
 
+## RAG System (`src/mcp_server/`)
+- Intelligent search system based on Whoosh
+- Domain-based document indexing and retrieval
+- Integration with MCP Server for tool exposure
+- Extensible architecture for new data domains
+- For detailed implementation, see [RAG System](rag_module.md)
+
 ## 🔄 Main Application Flows
 
 ### Authentication Flow
