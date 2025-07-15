@@ -11,7 +11,7 @@ from infrastructure.logging_config import logger
 if __name__ == "__main__":
     DATA_DIR = ROOT_DIR / "data"
 
-    YOUR_DOMAIN = Path(__file__).parent
+    YOUR_DOMAIN = Path(__file__).parent.name
 
     SOURCE_JSON_PATH = DATA_DIR / "src" / YOUR_DOMAIN / "faturamento_acr_tech_2023.json"
 

@@ -11,13 +11,14 @@ from infrastructure.logging_config import logger
 if __name__ == "__main__":
     DATA_DIR = ROOT_DIR / "data"
 
-    YOUR_DOMAIN = Path(__file__).parent
+    YOUR_DOMAIN = Path(__file__).parent.name
 
     NEW_DATA_JSON_PATH = DATA_DIR / "src" / YOUR_DOMAIN / "faturamento_acr_tech_2024.json"
 
     INDEX_DIR_PATH = DATA_DIR / "indexes" / YOUR_DOMAIN
 
     logger.info(f'Starting "{YOUR_DOMAIN}" index update')
+
     try:
         finance_schema = RAGFinanceReports()
 
