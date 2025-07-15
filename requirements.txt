@@ -6,3 +6,5 @@ bcrypt~=4.3.0
 watchdog~=6.0.0
 pytest~=8.4.0
 pytest-cov~=6.2.1
+nltk~=3.9.1
+Whoosh~=2.7.4

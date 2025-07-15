@@ -3,6 +3,11 @@ import json
 
 import mcp.server.stdio
 
+from interfaces import (
+    rag_finance_report_search,
+    get_finance_report_filters
+)
+
 from google.adk.tools.function_tool import FunctionTool
 from google.adk.tools.mcp_tool.conversion_utils import adk_to_mcp_tool_type
 
@@ -12,16 +17,12 @@ from mcp.server.models import InitializationOptions
 
 from infrastructure.logging_config import logger
 
-
-def welcome(name: str) -> str:
-    return f"Olá {name}, essa é uma mensagem de saudação gerada pelo MCP Server"
-
-
 logger.info("Creating MCP Server instance...")
 app = Server("Servidor-mcp")
 
 ADK_TOOLS = {
-    "welcome": FunctionTool(func=welcome),
+    "rag_finance_report_search": FunctionTool(func=rag_finance_report_search),
+    "get_finance_report_filters": FunctionTool(func=get_finance_report_filters),
 }
 
 

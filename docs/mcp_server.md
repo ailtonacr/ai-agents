@@ -20,6 +20,7 @@ The MCP Server provides a standardized interface for integrating tools and funct
 │ └─ Handler: @app.call_tool()                            │
 ├─────────────────────────────────────────────────────────┤
 │ ADK Tools Integration                                   │
+│ RAG System Integration                                  │
 ├─────────────────────────────────────────────────────────┤
 │ Infrastructure (logging, config)                        │
 └─────────────────────────────────────────────────────────┘
@@ -29,6 +30,7 @@ The MCP Server provides a standardized interface for integrating tools and funct
 
 - **Standard Protocol**: Implements Model Context Protocol specification
 - **ADK Integration**: Converts Google ADK tools to MCP format using `adk_to_mcp_tool_type`
+- **RAG Tools**: Exposes domain-specific RAG search capabilities (see [RAG System](rag_module.md))
 - **Transport Layer**: Communication via stdio (standard input/output)
 - **Async Execution**: Uses asyncio for non-blocking operations
 - **Error Handling**: Structured error responses and comprehensive logging
@@ -42,6 +44,13 @@ src/mcp_server/
 ├── infrastructure/
 │   ├── __init__.py
 │   └── logging_config.py          # Logging configuration
+├── interfaces/                    # Integration interfaces for tools
+├── services/                      # Business logic and services
+├── models/                        # Data models and schemas
+├── scripts/                       # Utility and maintenance scripts
+├── data/                          # Supporting data and files
+│   ├── indexes/<domain>/          # Index files for RAG by domain
+│   └── src/<domain>/              # Raw data for RAG create by domain
 └── logs/
     ├── mcp_server_activity.log    # Current log file
     └── mcp_server_activity_*.log  # Rotated log files
