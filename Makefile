@@ -37,18 +37,14 @@ lint:
 test:
 	PYTHONPATH=src pytest -v --cov=src --cov-report=term-missing
 
-## Runs the agents located in src/agents using the API server.
-run-agent:
-	cd src/agents && adk api_server
-
 ## Runs the agents in src/agents in development mode.
 run-dev:
 	cd src/agents && adk web
 
-## Runs the Streamlit app in src/app.
-run-ui:
-	streamlit run src/app/main.py
-
 ## Runs both agents and Streamlit app concurrently.
-run:
-	$(MAKE) run-agent & $(MAKE) run-ui
+docker-run:
+	docker-compose up --build
+
+## Stops and removes containers
+docker-stop:
+	docker-compose down --remove-orphans

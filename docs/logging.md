@@ -58,12 +58,24 @@ The logging system follows a **"Strategic Points Only"** approach, focusing on:
 
 ## Log Location
 
-Logs are saved in:
+Logs are saved with automatic rotation in:
+
+### Application Logs
 ```
-src/app/logs/app_activity_YYYY-MM-DD.log
+src/app/logs/app_activity.log                    # Current log file
+src/app/logs/app_activity.log.YYYY-MM-DD         # Rotated log files
 ```
 
-Example: `src/app/logs/app_activity_2025-06-30.log`
+### MCP Server Logs
+```
+src/mcp_server/logs/mcp_server_activity.log      # Current log file
+src/mcp_server/logs/mcp_server_activity.log.YYYY-MM-DD  # Rotated log files
+```
+
+**Log Rotation**: Both systems use `TimedRotatingFileHandler` with:
+- **Rotation**: Daily at midnight
+- **Retention**: 30 days of backup files
+- **Format**: Current file has no suffix, rotated files get `.YYYY-MM-DD` suffix
 
 ## Log Examples
 

@@ -9,24 +9,29 @@ Welcome to the comprehensive documentation for the AI Agents Platform. This sect
    git clone https://github.com/ailtonacr/ai-agents.git
    cd ai-agents
    ```
-2. **Set up virtual environment:**
+
+2. **Configure environment variables:**
+   - Create a `.env` file with your Google API key:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   # or venv\Scripts\activate  # Windows
+   echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
    ```
-3. **Install dependencies:**
+
+3. **Run with Docker (Recommended):**
    ```bash
-   make setup
+   make docker-run
    # or
-   pip install -r requirements.txt
+   docker-compose up --build
    ```
-4. **Configure environment variables:**
-   - Copy and edit `.env` as described in [installation.md](docs/installation.md)
-5. **Run the application:**
-   ```bash
-   make run
-   ```
+
+4. **Access the application:**
+   - Web UI: http://localhost:8501
+   - The application will automatically initialize the database and create tables
+
+**Alternative - Local Development (without UI):**
+```bash
+make run-dev
+# This runs agents only in development mode for testing and development
+```
 
 For detailed instructions, see [installation.md](docs/installation.md).
 
