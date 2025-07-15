@@ -8,7 +8,7 @@ class RAGFinanceReports(SchemaClass):
     id = ID(stored=True)
     doc_type = ID(stored=True)
     month = ID(stored=True, sortable=True)
-    year = ID(stored=True, sortable=True)
+    year = NUMERIC(stored=True, sortable=True)
     value = NUMERIC(stored=True, sortable=True)
     source = ID(stored=True)
     content = TEXT(stored=True, analyzer=ANALYZER)
