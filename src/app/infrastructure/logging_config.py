@@ -1,20 +1,18 @@
-import datetime
 import logging
 import os
+from logging.handlers import TimedRotatingFileHandler
 
-DATE = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime("%Y-%m-%d")
+LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
 
-LOG_FILE_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs", f"app_activity_{DATE}.log"
-)
+LOG_FILE_PATH = os.path.join(LOG_DIR, "app_activity.log")
 
-os.makedirs(os.path.dirname(LOG_FILE_PATH), exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s -  [%(filename)s:%(lineno)d] - %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE_PATH, mode="a"),
+        TimedRotatingFileHandler(LOG_FILE_PATH, when="midnight", backupCount=30),
         logging.StreamHandler(),
     ],
 )

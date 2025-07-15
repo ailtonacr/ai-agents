@@ -60,7 +60,24 @@ src/mcp_server/
 
 ### Starting the Server
 
+#### Docker (Recommended)
 ```bash
+# MCP server starts automatically with the agent
+make docker-run
+
+# Or start only the agent service
+docker-compose up agent
+
+# Check MCP server logs
+docker-compose logs agent
+```
+
+#### Local Development
+```bash
+# For development and testing
+make run-dev
+
+# Or manually
 cd src/mcp_server
 python server.py
 ```
@@ -70,7 +87,7 @@ python server.py
 Configure MCP clients to connect using:
 
 ```python
- tools=[
+tools=[
     MCPToolset(
         connection_params=StdioServerParameters(
             command="python3",
@@ -106,120 +123,38 @@ The server implements two main MCP handlers:
 3. Tool is executed asynchronously using `run_async()`
 4. Response is formatted as JSON and returned to client
 
-## 📊 Monitoring
+## 🐳 Docker Integration
 
-The server logs all activities including:
-- Tool registration and discovery
-- Client connections and requests
-- Tool execution results and errors
-- Server lifecycle events
+The MCP server runs inside the `adk_agent` container and is automatically started when the agent service starts. This provides:
 
-Log files are stored in `src/mcp_server/logs/` with daily rotation.
+- **Isolated environment**: Consistent runtime across development and production
+- **Automatic dependency management**: All Python packages pre-installed
+- **Integrated logging**: Logs accessible via `docker-compose logs agent`
+- **Network isolation**: Secure communication within Docker network
 
-## 🔄 Extending
+## 📊 Monitoring and Debugging
 
-### Adding New Tools
+### Docker Environment
+```bash
+# View MCP server logs
+docker-compose logs agent | grep "mcp_server"
 
-1. **Define your function**:
-```python
-def my_tool(param: str) -> str:
-    return f"Processed: {param}"
+# Access container for debugging
+docker-compose exec agent bash
+
+# Restart MCP server (restarts entire agent)
+docker-compose restart agent
 ```
 
-2. **Register in `ADK_TOOLS`**:
-```python
-ADK_TOOLS = {
-    "my_tool": FunctionTool(func=my_tool),
-}
+### Local Environment
+```bash
+# Direct log access
+tail -f src/mcp_server/logs/mcp_server_activity.log
+
+# Debug mode
+cd src/mcp_server
+python -u server.py  # Unbuffered output
 ```
 
-### Function Requirements
-
-#### Function Signature
-- Functions must have **type hints** for all parameters
-- Return type should be specified
-- Parameters become the tool's input schema automatically
-
-```python
-def calculate_sum(a: int, b: int) -> dict:
-    """Calculate the sum of two numbers."""
-    return {
-        "result": a + b,
-        "operation": "sum"
-    }
-```
-
-#### Parameter Types
-Supported parameter types for MCP tools:
-- `str` - String values
-- `int` - Integer numbers  
-- `float` - Decimal numbers
-- `bool` - Boolean values
-- `dict` - JSON objects
-- `list` - Arrays
-- Optional parameters: `param: str = "default"`
-
-#### Return Values
-Functions can return:
-- **Primitive types**: `str`, `int`, `float`, `bool`
-- **Dictionaries**: JSON-serializable objects
-- **Lists**: Arrays of serializable data
-- **Complex objects**: Must be JSON-serializable
-
-```python
-# Simple return
-def get_status() -> str:
-    return "Server is running"
-
-# Structured return
-def get_user_info(user_id: int) -> dict:
-    return {
-        "id": user_id,
-        "name": "John Doe",
-        "active": True
-    }
-```
-
-#### Function Documentation
-Use docstrings to provide tool descriptions:
-
-```python
-def weather_info(city: str, units: str = "metric") -> dict:
-    """Get weather information for a city.
-    
-    Args:
-        city (str): Name of the city.
-        units (str): Temperature units (metric, imperial).
-    
-    Returns:
-        dict: Weather data including temperature and conditions.
-    """
-    return {
-        "city": city,
-        "temperature": 22,
-        "units": units,
-        "condition": "sunny"
-    }
-```
-
-### Tool Execution
-
-When a client calls a tool, the MCP server:
-
-1. **Validates parameters** against function signature
-2. **Calls the function** with provided arguments
-3. **Serializes the response** to JSON
-4. **Wraps in MCP format** (`TextContent`)
-5. **Returns to client** via stdio
-
-
-### Model Context Protocol (MCP)
-
-#### Official Documentation
-- **[MCP Specification](https://spec.modelcontextprotocol.io/)** - Complete protocol specification
-- **[MCP Website](https://modelcontextprotocol.io/)** - Main project website and overview
-- **[MCP GitHub Repository](https://github.com/modelcontextprotocol)** - Source code and examples
-
-#### Implementation Resources
-- **[MCP Python SDK](https://pypi.org/project/mcp/)** - Python library for MCP implementation
-- **[MCP TypeScript SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk)** - TypeScript/JavaScript SDK
+For more details on RAG integration, see [RAG Module](rag_module.md).
+For development workflow, see [Development Guide](development.md).

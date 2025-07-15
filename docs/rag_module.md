@@ -5,6 +5,8 @@ This document describes the RAG system implemented in the AI Agents platform, ba
 ## Overview
 The RAG system enables intelligent search over specific datasets using Whoosh indexing. Each domain (e.g., financial reports) has its own data structure, schema, and specialized search class, following Clean Architecture principles.
 
+For detailed information about Whoosh features and advanced usage, see the [official Whoosh documentation](https://whoosh.readthedocs.io/en/latest/index.html).
+
 ## System Architecture
 
 ```
@@ -27,6 +29,32 @@ src/mcp_server/
 └── server.py                        # MCP tools registration
 ```
 
+## 🐳 Docker Integration
+
+The RAG system runs seamlessly within the Docker environment:
+
+### Running RAG Scripts with Docker
+```bash
+# Create indexes using Docker
+docker-compose exec agent python src/mcp_server/scripts/finance_reports/create_index.py
+
+# Update indexes using Docker
+docker-compose exec agent python src/mcp_server/scripts/finance_reports/update_index.py
+
+# Access container for manual operations
+docker-compose exec agent bash
+```
+
+### Local Development
+```bash
+# For development and testing
+make run-dev
+
+# Run scripts locally
+cd src/mcp_server
+python scripts/finance_reports/create_index.py
+```
+
 ## Core Components
 
 ### RAGManager
@@ -42,8 +70,41 @@ Abstract class that defines the common interface for RAG searches:
 ### Domain Schema
 Models that define Whoosh data structure (e.g., RAGFinanceReports):
 - Inherits from Whoosh's SchemaClass
-- Defines fields: TEXT, ID, STORED (for more formats, see the [official documentation](https://whoosh.readthedocs.io/en/latest/index.html))
+- Defines fields: TEXT, ID, STORED (for more field types, see the [official documentation](https://whoosh.readthedocs.io/en/latest/index.html))
 - Specific configurations such as text analyzers
+
+## Data Format Example
+
+The RAG system expects JSON files with the following structure:
+
+```json
+[
+  {
+    "id": "report_2024_001",
+    "title": "Quarterly Financial Report Q1 2024",
+    "category": "quarterly",
+    "date": "2024-03-31",
+    "content": "Revenue increased by 15% compared to the previous quarter...",
+    "metadata": {
+      "department": "finance",
+      "confidentiality": "internal",
+      "author": "Financial Team"
+    }
+  },
+  {
+    "id": "report_2024_002", 
+    "title": "Annual Budget Analysis 2024",
+    "category": "annual",
+    "date": "2024-12-31",
+    "content": "The annual budget shows positive trends in operational efficiency...",
+    "metadata": {
+      "department": "finance",
+      "confidentiality": "public",
+      "author": "CFO Office"
+    }
+  }
+]
+```
 
 ## Getting Started: Creating a New RAG Domain
 
@@ -120,7 +181,7 @@ if __name__ == "__main__":
     DATA_DIR = ROOT_DIR / "data"
 
     # Automatically picks up your domain name (matches your folder name).
-    YOUR_DOMAIN = Path(__file__).parent
+    YOUR_DOMAIN = Path(__file__).parent.name
     
     # Path to source JSON data
     SOURCE_JSON_PATH = DATA_DIR / "src" / YOUR_DOMAIN / "data.json"
@@ -164,7 +225,7 @@ if __name__ == "__main__":
     DATA_DIR = ROOT_DIR / "data"
 
     # Automatically picks up your domain name (matches your folder name).
-    YOUR_DOMAIN = Path(__file__).parent
+    YOUR_DOMAIN = Path(__file__).parent.name
     
     # New data to add
     NEW_DATA_JSON_PATH = DATA_DIR / "src" / YOUR_DOMAIN / "new_data.json"
@@ -181,7 +242,7 @@ if __name__ == "__main__":
             json_input_path=NEW_DATA_JSON_PATH
         )
 
-        logger.info(f'{YOUR_DOMAIN} index created successfully')
+        logger.info(f'{YOUR_DOMAIN} index updated successfully')
         
     except FileNotFoundError as e:
         logger.error(f'File not found: {e}')
@@ -199,129 +260,112 @@ from infrastructure.logging_config import logger
 
 def rag_<your_domain>_search(query: str, top_k: int = 5, filters: dict = None) -> dict:
     """
-    MCP interface for <your_domain> search.
+    Search <your_domain> documents using RAG.
     
     Args:
-        query: Search term
-        top_k: Maximum number of results
-        filters: Optional filters
+        query: Search query string
+        top_k: Number of results to return (default: 5)
+        filters: Dictionary of filters to apply (optional)
     
     Returns:
-        dict: Search results
+        Dictionary with search results and metadata
     """
     try:
         searcher = <YourDomain>RAGSearcher()
-        return searcher.search(query, top_k, filters)
+        results = searcher.search(query, top_k, filters)
+        return results
     except Exception as e:
-        logger.error(f"Error in <your_domain> search: {e}")
-        return {"status": "error", "message": str(e)}
+        logger.error(f"Error in <your_domain> RAG search: {e}")
+        return {"error": str(e), "results": []}
 
 def get_<your_domain>_filters() -> dict:
-    """Returns available filters for <your_domain>"""
+    """Get available filters for <your_domain> search."""
     try:
         searcher = <YourDomain>RAGSearcher()
         return searcher.get_available_filters()
     except Exception as e:
         logger.error(f"Error getting <your_domain> filters: {e}")
-        return {"status": "error", "message": str(e)}
+        return {"error": str(e)}
 ```
 
-### 5. Register in MCP Server
+### 5. Register Tools in MCP Server
 
-Edit `src/mcp_server/interfaces/__init__.py` before include your function in MCP Server.
-
-```python
-# Add all your functions for import in 'server.py'
-from .rag_<your_domain> import (
-    rag_<your_domain>_search,
-    rag_<your_domain>_filters
-)
-```
-
-Edit `src/mcp_server/server.py` to include your functions:
+Add your new tools to `src/mcp_server/server.py`:
 
 ```python
-# Add import
-from interfaces import (
-    rag_<your_domain>_search,
-    get_<your_domain>_filters
-)
+from interfaces.rag_<your_domain> import rag_<your_domain>_search, get_<your_domain>_filters
 
 # Add to ADK_TOOLS dictionary
 ADK_TOOLS = {
+    # ...existing tools...
     "rag_<your_domain>_search": FunctionTool(func=rag_<your_domain>_search),
     "get_<your_domain>_filters": FunctionTool(func=get_<your_domain>_filters),
-    # ... other tools
 }
 ```
 
-## JSON Data Example
+## 🔧 Development Workflow
 
-Your JSON data should follow this structure for optimal indexing:
+### Docker Development
+```bash
+# Start full development environment
+make docker-run
 
-```json
-[
-  {
-    "id": "doc_001",
-    "title": "Monthly Revenue Report",
-    "category": "financial",
-    "date": "2024-01",
-    "content": "This document contains detailed revenue analysis for January 2024. Total revenue reached $150,000 with a 15% increase compared to previous month."
-  },
-  {
-    "id": "doc_002", 
-    "title": "Quarterly Expenses Summary",
-    "category": "financial",
-    "date": "2024-Q1",
-    "content": "Comprehensive breakdown of operational expenses for Q1 2024. Major categories include personnel costs, infrastructure, and marketing investments."
-  }
-]
+# Execute RAG scripts inside container
+docker-compose exec agent python src/mcp_server/scripts/<domain>/create_index.py
+docker-compose exec agent python src/mcp_server/scripts/<domain>/update_index.py
+
+# Access container for debugging
+docker-compose exec agent bash
 ```
 
-## Implementation Flow
+### Local Development  
+```bash
+# Start agents in development mode
+make run-dev
 
-1. **Prepare data**: Organize your data in JSON format in `data/src/<your_domain>/`
-2. **Define schema**: Create model with appropriate fields for your domain
-3. **Implement searcher**: Inherit from BaseRAGSearcher and specialize as needed
-4. **Create scripts**: Implement create_index.py and update_index.py
-5. **Execute indexing**: Run creation script to generate initial index
-6. **Create MCP interface**: Implement functions for MCP exposure
-7. **Register in server**: Add tools to MCP server
-8. **Test**: Validate search and filters working correctly
-
-## Usage Examples
-
-```python
-# Simple search
-searcher = YourDomainRAGSearcher()
-results = searcher.search("search term", top_k=3)
-
-# Search with filters
-results = searcher.search(
-    "search term", 
-    top_k=5, 
-    filter_by={"category": "example", "date": "2024"}
-)
-
-# Get available filters
-filters = searcher.get_available_filters()
+# Run RAG scripts locally
+cd src/mcp_server
+python scripts/<domain>/create_index.py
+python scripts/<domain>/update_index.py
 ```
 
-## Important Notes
+## 📚 External Resources
 
-- Always run create_index.py before first search
-- Use update_index.py to add new data without recreating the index
-- Logs are automatically recorded via centralized logging system
-- Whoosh schemas define indexable and searchable fields
-- Filters should be defined as ID or TEXT fields in schema
-- System supports specific analyzers (e.g., Portuguese)
+- [Whoosh Official Documentation](https://whoosh.readthedocs.io/en/latest/index.html) - Complete reference for Whoosh features
+- [Whoosh Field Types](https://whoosh.readthedocs.io/en/latest/schema.html) - Available field types and options
+- [Whoosh Query Language](https://whoosh.readthedocs.io/en/latest/querylang.html) - Advanced query syntax
+- [Whoosh Analysis](https://whoosh.readthedocs.io/en/latest/analysis.html) - Text analysis and tokenization
 
-## References
+## Best Practices
 
-- **Whoosh Documentation**: [https://whoosh.readthedocs.io/en/latest/index.html](https://whoosh.readthedocs.io/en/latest/index.html)
-- **Whoosh Schema Guide**: [https://whoosh.readthedocs.io/en/latest/schema.html](https://whoosh.readthedocs.io/en/latest/schema.html)
-- **Whoosh Searching**: [https://whoosh.readthedocs.io/en/latest/searching.html](https://whoosh.readthedocs.io/en/latest/searching.html)
+1. **Schema Design**: Define clear, searchable fields with appropriate analyzers
+2. **Data Structure**: Use consistent JSON structure for your domain
+3. **Index Management**: Use the provided scripts for index operations
+4. **Clean Architecture**: Follow the established patterns for new domains
+5. **Testing**: Test both index creation and search functionality
+6. **Docker Integration**: Use Docker for consistent environments
+7. **Error Handling**: Always include proper error handling and logging
 
----
+## Troubleshooting
 
-For more details about architecture, see [architecture.md](architecture.md) and [mcp_server.md](mcp_server.md).
+### Common Issues
+- **Index creation fails**: Check JSON data format and file paths
+- **Search returns no results**: Verify index exists and contains data
+- **Import errors**: Ensure Python path includes project root
+- **Permission errors**: Check file/directory permissions in Docker
+
+### Debug Commands
+```bash
+# Check index status (Docker)
+docker-compose exec agent ls -la src/mcp_server/data/indexes/<domain>/
+
+# Check logs (Docker)
+docker-compose logs agent
+
+# Manual testing (Local)
+cd src/mcp_server
+python -c "from services.<domain>_rag_searcher import <Domain>RAGSearcher; s = <Domain>RAGSearcher(); print(s.search('test'))"
+```
+
+For more information on development workflow, see [Development Guide](development.md).
+For MCP server integration, see [MCP Server](mcp_server.md).
