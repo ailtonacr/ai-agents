@@ -4,19 +4,19 @@ networks:
 
 services:
   db:
-    image: mysql:8.0
-    container_name: mysql_db
+    image: postgres:15
+    container_name: postgres_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: chat_db
-      MYSQL_USER: dev
-      MYSQL_PASSWORD: dev
+      POSTGRES_DB: chat_db
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - ai_agents_net
     healthcheck:
-      test: mysqladmin ping -h localhost -u dev --password=dev
+      test: ["CMD-SHELL", "pg_isready -U dev -d chat_db"]
       timeout: 20s
       retries: 10
       interval: 10s
@@ -54,10 +54,11 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - MYSQL_HOSTS=db
-      - MYSQL_USER=dev
-      - MYSQL_PASSWORD=dev
-      - MYSQL_DATABASE=chat_db
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DATABASE=chat_db
       - API_BASE_URL=http://agent:8000
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     volumes:
@@ -66,4 +67,4 @@ services:
       - ai_agents_net
 
 volumes:
-  mysql_data:
+  postgres_data:

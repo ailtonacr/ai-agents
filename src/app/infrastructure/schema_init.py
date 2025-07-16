@@ -12,10 +12,10 @@ def init_db():
         cursor.execute(
             """
                 CREATE TABLE IF NOT EXISTS users (
-                id VARCHAR(36) PRIMARY KEY,
+                id UUID PRIMARY KEY,
                 username VARCHAR(20) UNIQUE NOT NULL,
                 hashed_password VARCHAR(256) NOT NULL,
-                email VARCHAR(50) UNIQUE NULL,
+                email VARCHAR(50) UNIQUE,
                 role VARCHAR(5) NOT NULL DEFAULT 'user',
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,7 +26,7 @@ def init_db():
         cursor.execute(
             """
                 CREATE TABLE IF NOT EXISTS sessions (
-                id VARCHAR(36) PRIMARY KEY,
+                id UUID PRIMARY KEY,
                 username VARCHAR(20) NOT NULL,
                 adk_session_id VARCHAR(100) UNIQUE NOT NULL,
                 agent_name VARCHAR(30) NOT NULL,
@@ -40,8 +40,8 @@ def init_db():
         cursor.execute(
             """
                CREATE TABLE IF NOT EXISTS messages (
-               id INTEGER PRIMARY KEY AUTO_INCREMENT,
-               session_db_id VARCHAR(36) NOT NULL,
+               id SERIAL PRIMARY KEY,
+               session_db_id UUID NOT NULL,
                role VARCHAR(5) NOT NULL,
                text TEXT NOT NULL,
                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
