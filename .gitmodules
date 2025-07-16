@@ -1,3 +1,6 @@
 [submodule "ai-agents-front-end"]
 	path = ai-agents-front-end
-	url = git@github.com:ailtonacr/ai-agents-front-end.git
+	url = https://github.com/ailtonacr/ai-agents-front-end.git
+[submodule "ai-agents-back-end"]
+	path = ai-agents-back-end
+	url = https://github.com/ailtonacr/ai-agents-back-end.git
