@@ -5,23 +5,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-COPY src/ /app/src/
-
-
-FROM base as agent
+COPY src/ ./src/
 
 EXPOSE 8000
 
 WORKDIR /app/src/agents/
 
 CMD ["adk", "api_server", "--host", "0.0.0.0", "--port", "8000"]
-
-
-FROM base as app
-
-EXPOSE 8501
-
-WORKDIR /app/src/app/
-
-CMD ["streamlit", "run", "main.py", "--server.address=0.0.0.0"]
