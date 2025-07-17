@@ -4,3 +4,6 @@
 [submodule "ai-agents-back-end"]
 	path = ai-agents-back-end
 	url = https://github.com/ailtonacr/ai-agents-back-end.git
+[submodule "ai-agents-mcp-server"]
+	path = ai-agents-mcp-server
+	url = https://github.com/ailtonacr/ai-agents-mcp-server.git
